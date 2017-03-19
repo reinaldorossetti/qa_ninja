@@ -1,5 +1,6 @@
 """
 Author: Reinaldo Mateus R J, Test version: 0.1
+Leia: https://docs.python.org/3.6/tutorial/classes.html#multiple-inheritance
 """
 
 from selenium import webdriver
