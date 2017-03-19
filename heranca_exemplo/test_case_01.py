@@ -29,6 +29,9 @@ class testsCase(login.LoginTest, logout.LogoutTest, find_test_case.FindTestCase)
         self.logout_test(self.driver)
         print(self.validar_logout(self.driver))
 
+        # sair do browser.
+        self.driver.quit()
+
 
 if __name__ == '__main__':
     test = testsCase()
