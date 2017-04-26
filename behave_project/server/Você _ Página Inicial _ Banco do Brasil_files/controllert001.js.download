@@ -1,0 +1,647 @@
+define([], function() {
+	'use strict';
+
+	function controllerT001($location, $scope, $http, $sce, fDescritorPaginas, fHeader, $timeout, fRedSiteExt) {
+		var urlRest = "/pbb/rest/"; 
+		
+		/**
+		 * chamdada do descritor de pagina.
+		 */	
+		fDescritorPaginas.getComponente().then(function(response) {
+			if (response.success) {
+				$scope.componentesPagina = response.componente;
+			 
+				
+			var propensoesStr = " ";
+			angular.forEach(portalParam.propensoes, function(value, key){	 	//testando se listaChamadas2 tem dados
+				if(portalParam.propensoes.length > key+1){
+					propensoesStr += "00090"+value.codigo+","	
+				}else{
+					propensoesStr += "00090"+value.codigo
+				}
+			});
+							
+				
+				
+			/** Componente Header */
+			$scope.isheader = false;
+			if($scope.componentesPagina.header){
+				fHeader.getComponente().then(function(response) {
+					if (response.success) {
+						if(response.componente != ""){
+							$scope.header = response.componente;
+							$scope.isHeader = true;
+						}
+					 }
+				}); 
+			}
+				
+			$scope.isDestaqueBuscaHome = false;
+			
+			if($scope.componentesPagina.destaqueBuscaHome){
+					
+					var urlWsDestaqueBuscaHome = urlRest+"WsDestaqueBuscaHome/"+portalParam.diretorioPai+"/"+portalParam.diretorioFilho+"/"+portalParam.seguimentoFiltro+"/"+portalParam.idioma+"/"+portalParam.tempoCache+"/1/90/16";
+					$http.get(urlWsDestaqueBuscaHome).success(function(data){
+						if (data != ""){
+							$scope.destaqueBuscaHome = data;
+							if(data.listaBanner != null && data.listaBanner.length > 0){
+								angular.forEach(data.listaBanner, function(value, key){
+									data.listaBanner[key]["estiloBanner"] = "{'background': '#ccc url("+value.imagem.enderecoImagem.trim()+") no-repeat top','background-size': 'cover','min-height':'"+((value.imagem.altura) ? value.imagem.altura : 400 )+"px','max-height':'"+(((value.imagem.altura) ? value.imagem.altura : 400)*2)+"px'}";
+								});
+							}
+							$scope.isDestaqueBuscaHome = true;							
+						}
+					}).error(function(data){
+					
+					});
+					
+			}
+				
+			
+			
+			
+			
+				
+				/**
+				 * Chamada ao Web Service para carregamento do componente Destaque Produto P1
+				 */   	
+				
+				$scope.isDestaqueProdutoP1 = false;
+				
+				if($scope.componentesPagina.destaqueProdutoP1){
+					var urlWsDestaqueProduto = urlRest+"WsDestaqueProduto/"+portalParam.diretorioPai+"/"+portalParam.diretorioFilho+"/"+portalParam.seguimentoFiltro+"/"+portalParam.idioma+"/"+portalParam.tempoCache+"/2";
+					$http.get(urlWsDestaqueProduto).success(function(data){
+						$scope.trustSrc = function(src) {
+							return $sce.trustAsResourceUrl(src);
+						 }
+						
+						if (data != ""){
+							$scope.destaqueProdutoP1 = data;
+							$scope.isDestaqueProdutoP1 = true;
+						}
+					
+					}).error(function(data){
+						
+					});
+					
+				}
+				
+				
+				/**
+				 * Chamada ao Web Service para carregamento do componente Destaque Produto P14
+				 */   	
+				
+				$scope.isDestaqueProdutoP14 = false;
+				if($scope.componentesPagina.destaqueProdutoP14){
+					var urlWsDestaqueProduto = urlRest+"WsDestaqueProduto/"+portalParam.diretorioPai+"/"+portalParam.diretorioFilho+"/"+portalParam.seguimentoFiltro+"/"+portalParam.idioma+"/"+portalParam.tempoCache+"/6";
+					$http.get(urlWsDestaqueProduto).success(function(data){
+						
+						$scope.trustSrc = function(src) {
+							return $sce.trustAsResourceUrl(src);
+						 }
+						
+						if (data != ""){
+							$scope.destaqueProdutoP14 = data;
+							$scope.isDestaqueProdutoP14 = true;
+						}
+					
+					}).error(function(data){
+						//alert("Erro em carregar dados do Lead ... "+data);
+						
+					});
+				}    	    	
+				
+				/**
+				 * Chamada ao Web Service para carregamento do componente Beneficios Home
+				 */   	
+				
+				$scope.isBeneficiosHome = false;
+				if($scope.componentesPagina.beneficiosHome){
+					var urlWsBeneficiosHome = urlRest+"WsBeneficiosHome/"+portalParam.diretorioPai+"/"+portalParam.diretorioFilho+"/"+portalParam.seguimentoFiltro+"/"+portalParam.idioma+"/"+portalParam.tempoCache+"/0"+portalParam.codigoMenuSelecionado+"/3"+"/6"+"/1";
+					$http.get(urlWsBeneficiosHome).success(function(data){
+						if (data != ""){
+							$scope.beneficiosHome = data;
+							$scope.isBeneficiosHome = true;
+						}
+					}).error(function(data){ });
+				}
+				
+				/** Chamada ao Web Service para carregamento do componente Fale Conosco */   	
+				
+				$scope.isFaleConosco = false;
+				if($scope.componentesPagina.faleConosco){    	    		
+					var urlWsFaleConosco = urlRest+"WsFaleConosco/"+portalParam.diretorioPai+"/"+portalParam.diretorioFilho+"/"+portalParam.seguimentoFiltro+"/"+portalParam.idioma+"/"+portalParam.tempoCache+"/33/18/19/20/21/22/23/24/25";
+					$http.get(urlWsFaleConosco).success(function(data){        	    		
+						if (data != ""){        	    			
+							$scope.faleConosco = data;        	    			
+							$scope.isFaleConosco = true;
+						}
+					}).error(function(data){ });
+				}
+				
+				/** Chamada ao Web Service para carregamento do componente Box Produtos Home */  	
+				
+				$scope.isBoxProdutosHomeP4 = false;
+				$scope.isBoxProdutosHomeImgP4 = true;
+				$scope.iP4 = 0;
+				if($scope.componentesPagina.boxProdutoHomeP4){
+					
+					var urlWsBoxProdutosHome = urlRest+"WsBoxProdutosHome/"+portalParam.diretorioPai+"/"+portalParam.diretorioFilho+"/"+portalParam.seguimentoFiltro+"/"+portalParam.idioma+"/"+portalParam.tempoCache+"/5"+"/4";
+					$http.get(urlWsBoxProdutosHome).success(function(data){
+						
+						if (data != ""){
+							
+							$scope.isBoxProdutosHomeP4 = true;
+									
+							
+							angular.forEach(data.chamadas, function(value, key){
+					
+								if(data.chamadas[key].texto.trim() == "."){
+									data.chamadas[key].texto = " ";
+								}
+								
+								if(data.chamadas[key].enderecoPaginaChamada.trim() ==""){
+									data.chamadas[key]["existeLink"] = "cursorForced";
+								}
+								
+								if(data.chamadas[key].imagem == null){
+									data.chamadas[key]["imgNone"] = true;
+									data.chamadas[key]["imgClass1"] = "marginTop1";
+									data.chamadas[key]["imgClass2"] = "marginTop2";
+								}else{
+									data.chamadas[key]["imgNone"] = false;
+								}
+
+								$scope.boxProdutosHomeP4 = data;
+								$scope.iP4++;
+							});
+							
+						}
+					}).error(function(data){
+					});
+					
+					
+				}
+				
+				
+				
+				
+
+				/**
+				 * Chamada ao Web Service para carregamento do componente Box Produtos Home
+				 */  	
+				
+				$scope.isBoxProdutosHomeP8 = false;
+				$scope.isBoxProdutosHomeImgP8 = true;
+				$scope.iP8 = 0;
+				if($scope.componentesPagina.boxProdutoHomeP8){
+					
+					
+					var urlWsBoxProdutosHome = urlRest+"WsBoxProdutosHome/"+portalParam.diretorioPai+"/"+portalParam.diretorioFilho+"/"+portalParam.seguimentoFiltro+"/"+portalParam.idioma+"/"+portalParam.tempoCache+"/8"+"/11";
+					$http.get(urlWsBoxProdutosHome).success(function(data){
+					
+						if (data != ""){
+							
+							$scope.isBoxProdutosHomeP8 = true;
+							
+							$scope.boxProdutosHomeP8 = data;    	
+							
+							angular.forEach(data.chamadas, function(value, key){
+								
+								// if(data.chamadas[key].texto.indexOf(">>") != -1){
+					   //          	var textoSplit = data.chamadas[key].texto.split('>>');
+					   //          	data.chamadas[key].texto = textoSplit[0];
+					   //          	data.chamadas[key]["txtLink"] = textoSplit[1];
+					//         	}	
+								if(data.chamadas[key].texto.trim() == "."){
+									data.chamadas[key].texto = " ";
+								}	
+								$scope.goboxProdutosHome = function(endereco) {
+									if(endereco.trim() !=""){
+										fRedSiteExt.redirecionarSiteExterno(endereco);
+									}
+								};
+							   
+								if(data.chamadas[key].enderecoPaginaChamada.trim() ==""){
+									data.chamadas[key]["existeLink"] = "cursorForced";
+								}
+								
+								if(data.chamadas[key].imagem == null){
+									data.chamadas[key]["imgNone"] = true;
+									data.chamadas[key]["imgClass1"] = "marginTop1";
+									data.chamadas[key]["imgClass2"] = "marginTop2";
+								}else{
+									data.chamadas[key]["imgNone"] = false;
+								}
+							   
+								$scope.iP8++;
+							});
+					
+							
+							
+						}
+					}).error(function(data){
+					});        	    		
+				}    	    	
+				
+				/**
+				 * Chamada ao Web Service para carregamento do componente BannerPromocional
+				 */   	
+				
+				$scope.isBannerPromocional = false;
+				if($scope.componentesPagina.bannerPromocional){
+					
+					
+					
+					var urlWsBannerPromocional = urlRest+"WsBannerPromocional/propensao/"+propensoesStr+"/"+portalParam.diretorioPai+"/"+portalParam.diretorioFilho+"/"+portalParam.seguimentoFiltro+"/"+portalParam.idioma+"/"+portalParam.tempoCache+"/0/3";
+					$http.get(urlWsBannerPromocional).success(function(data){ 
+			 
+						if (data != ""){
+							$scope.bannerPromocional = data;
+							$scope.isBannerPromocional = true;
+							
+						}
+				
+					}).error(function(data){
+						
+					});
+				}
+				
+				
+				
+				
+				/** Chamada ao Web Service para carregamento dos componentes Ultimasbb*/   	    	
+				$scope.isUltimasbbP30 = false;
+				if($scope.componentesPagina.ultimasBBP30){    	    		
+					var urlWsUltimasbb = urlRest+"WsUltimasBB/"+portalParam.diretorioPai+"/"+portalParam.diretorioFilho+"/"+portalParam.seguimentoFiltro+"/"+portalParam.idioma+"/"+portalParam.tempoCache+"/30"+"/10";
+					$http.get(urlWsUltimasbb).success(function(data){    		    		
+						if (data != ""){     		    			
+							$scope.ultimasbbP30 = data;    
+							$scope.isUltimasbbP30 = true;
+						}
+					}).error(function(data){    		    		
+					});
+				}	
+				
+				/** Chamada ao Web Service para carregamento dos componentes Ultimasbb*/   	    	
+				$scope.isUltimasbbP31 = false;
+				if($scope.componentesPagina.ultimasBBP31){    	    		
+					var urlWsUltimasbb = urlRest+"WsUltimasBB/"+portalParam.diretorioPai+"/"+portalParam.diretorioFilho+"/"+portalParam.seguimentoFiltro+"/"+portalParam.idioma+"/"+portalParam.tempoCache+"/31"+"/11";
+					$http.get(urlWsUltimasbb).success(function(data){    		    		
+						if (data != ""){     	
+							
+							$scope.ultimasbbP31 = data;    
+							$scope.isUltimasbbP31 = true;
+						}
+					}).error(function(data){    		    		
+					});
+				}   	    	
+				
+				/** Chamada ao Web Service para carregamento do componente BoxImgCallGrande */   	              	        
+				$scope.isBoxImgCallGrande = false;
+				if(($scope.componentesPagina.boxImgCallGrande)){
+					var urlWsBoxImgCallGrande = urlRest+"WsBoxImgCallGrande/"+portalParam.diretorioPai+"/"+portalParam.diretorioFilho+"/"+portalParam.seguimentoFiltro+"/"+portalParam.idioma+"/"+portalParam.tempoCache+"/9/27";
+					$http.get(urlWsBoxImgCallGrande).success(function(data){
+						
+						if (data != ""){
+							   
+							if(data.chamada != null && data.chamada.enderecoPaginaChamada != null && data.chamada.enderecoPaginaChamada.trim() != "" ){
+								data.chamada["clss_cursorPointer"] = "cursorPointer"; 	//testar se se existe link e setar cursorPointer
+							}else{
+								data.chamada["isBoxImgCallGrande_link"] = false; 		//testar se se existe link e (>>) e setar ng-show
+							}
+								
+							if(data.chamada.isBoxImgCallGrande_link != false && data.chamada.enderecoPaginaChamada.trim() !=""){
+							
+								$scope.chamarLink = function(endereco) {
+									if(endereco !="" && endereco != null){
+										if(endereco.trim() !=""){                           
+											fRedSiteExt.redirecionarSiteExterno(endereco);
+										}
+									}
+								};
+									
+							}else{
+								data.chamada["clss_cursorPointer"] = "";
+							}
+					  
+							$scope.boxImgCallGrande = data;    	                
+							$scope.isBoxImgCallGrande = true;
+						}    	           
+						
+					}).error(function(data){	            
+					});	    	        
+				}   	        
+				
+				/**
+				 * Chamada ao Web Service para carregamento do componente Box img Call Peq P28
+				 * 
+				 */
+				$scope.isBoxImgCallPeq = false;    	
+				if(($scope.componentesPagina.boxImgCallPeq)){
+					var urlWsBoxImgCallPeq = urlRest+"WsBoxImgCallPeq/"+portalParam.diretorioPai+"/"+portalParam.diretorioFilho+"/"+portalParam.seguimentoFiltro+"/"+portalParam.idioma+"/"+portalParam.tempoCache+"/12/28";
+					$http.get(urlWsBoxImgCallPeq).success(function(data){    		
+						if (data != ""){    			
+							$scope.isBoxImgCallPeq = true;  
+							$scope.boxImgCallPeq = data;       			
+						}    		    	
+					}).error(function(data){
+						//alert("Erro em carregar dados do Lead ... "+data);
+						
+					});    
+					
+				} 	     
+				/**
+				 * Chamada ao Web Service para carregamento do componente Box Texto Call P9
+				 * 
+				 */  
+				//EM CONSTRUÇÃO 
+							
+				
+				/** Chamada ao Web Service para carregamento do componente Necessidades1P2 */   	
+				$scope.isNecessidade1P2 = false;
+				if(($scope.componentesPagina.necessidade1P2)){
+					var urlWsNecessidade1 = urlRest+"WsNecessidade1/"+portalParam.diretorioPai+"/"+portalParam.diretorioFilho+"/"+portalParam.seguimentoFiltro+"/"+portalParam.idioma+"/"+portalParam.tempoCache+"" +
+					"/2/7";
+					$http.get(urlWsNecessidade1).success(function(data){ 
+						if (data != ""){  	
+							$scope.necessidade1P2 = data;    			    			
+							$scope.isNecessidade1P2 = true;
+						}
+					}).error(function(data){ });
+					
+				}
+				
+				
+				/** Chamada ao Web Service para carregamento do componente Necessidades1P2 */   	
+				$scope.isNecessidade1P17 = false;
+				if(($scope.componentesPagina.necessidade1P17)){
+					var urlWsNecessidade1 = urlRest+"WsNecessidade1/"+portalParam.diretorioPai+"/"+portalParam.diretorioFilho+"/"+portalParam.seguimentoFiltro+"/"+portalParam.idioma+"/"+portalParam.tempoCache+"" +
+					"/17/8";
+					$http.get(urlWsNecessidade1).success(function(data){ 
+						if (data != ""){  	
+							$scope.necessidade1P17 = data;    			    			
+							$scope.isNecessidade1P17 = true;
+						}
+					}).error(function(data){ });
+					
+				}
+				
+				
+				
+				
+				/** Chamada ao Web Service para carregamento do componente MaisInfo1 - P 13,6 */       	    	
+				$scope.isMaisInfo1P13= false;
+				if($scope.componentesPagina.maisInfo1P13){ 
+					var urlWsMaisInfo1 = urlRest+"WsMaisInfo1/"+portalParam.diretorioPai+"/"+portalParam.diretorioFilho+"/"+portalParam.seguimentoFiltro+"/"+portalParam.idioma+"/"+portalParam.tempoCache+"/0"+portalParam.codigoMenuSelecionado;
+					var urlMaisInfo11 = urlWsMaisInfo1+"/13/6";
+					$http.get(urlMaisInfo11).success(function(data){
+						
+						if (data != ""){
+							
+							$scope.maisInfo1P13 = data;
+							
+							if(data.chamada != null && data.chamada.imagem != null){
+								if(data.chamada.imagem.enderecoImagem != null){
+									//console.log("imagem não null");
+									data.chamada["clss_contClass"] = "contClass";  
+									data.chamada["isMaisInfoImg"] = true;  
+								}else{
+									//console.log("imagem null");    				
+									data.chamada["clss_noMargin"] = "noMargin";  
+									data.chamada["clss_newFont"] = "newFont";  
+									data.chamada["isMaisInfoImg"] = false;  
+								}
+							}else{
+								data.chamada["clss_noMargin"] = "noMargin";  
+								data.chamada["clss_newFont"] = "newFont";  
+								data.chamada["isMaisInfoImg"] = false;   
+							}	    	    			
+							$scope.isMaisInfo1P13 = true;	    	    			    			
+						}	    	    		
+					}).error(function(data){
+					});	    	    	
+				}	
+				
+				/** Chamada ao Web Service para carregamento InfoGeral13 */
+				
+				$scope.isInfoGeral = false;
+				if($scope.componentesPagina.infoGeral){	
+					var urlWsInfoGeral = urlRest+"WsInfoGeral/"+portalParam.diretorioPai+"/"+portalParam.diretorioFilho+"/"+portalParam.seguimentoFiltro+"/"+portalParam.idioma+"/"+portalParam.tempoCache+"/0"+portalParam.codigoMenuSelecionado;
+					var urlInfoGeral13 = urlWsInfoGeral+"/13";
+					$http.get(urlInfoGeral13).success(function(data){
+						
+						if (data != ""){    			
+							$scope.infoGeral = data;    			
+							if (data[0].imagem != null){    				
+								$scope.isInfoGeral = true;
+							}    			
+						}
+						
+					}).error(function(data){
+					});
+				}
+				
+				
+				/** Chamada ao Web Service para carregamento do componente BoxIconCall */  
+				
+				$scope.isBoxIconCall = false;
+				
+				
+				var urlWsBoxIconCall = urlRest+"WsBoxIconCall/"+portalParam.diretorioPai+"/"+portalParam.diretorioFilho+"/"+portalParam.seguimentoFiltro+"/"+portalParam.idioma+"/"+portalParam.tempoCache+"/15";
+				$http.get(urlWsBoxIconCall).success(function(data){
+				
+					if (data != ""){
+						var contPass = 0;
+						$scope.isBoxIconCall = true;
+						$scope.boxIconCall = data;
+								
+					}
+				
+				}).error(function(data){
+					//alert("Erro em carregar dados do Box ... "+data);
+					
+				});
+		
+				
+				
+				/** Chamada ao Web Service para carregamento do componente MaisInfo2 */    	
+				$scope.isMaisInfo2 = false;
+				if($scope.componentesPagina.maisInfo2){	
+					
+					var urlWsMaisInfo2 = urlRest+"WsMaisInfo2/"+portalParam.diretorioPai+"/"+portalParam.diretorioFilho+"/"+portalParam.seguimentoFiltro+"/"+portalParam.idioma+"/"+portalParam.tempoCache+"/1"+"/7"+"/12";
+					$http.get(urlWsMaisInfo2).success(function(data){
+						if (data != ""){
+							$scope.maisInfo2 = data;    			
+							if(data.chamada == null){
+								$scope.isMaisInfo2 = false;
+							}else{
+								$scope.isMaisInfo2 = true;
+							}
+						}
+					}).error(function(data){
+					});
+				}
+				
+				/** Chamada ao Web Service para carregamento do componente Necessidades1P17 */   	
+				$scope.isNecessidade1P17 = false;
+				if(($scope.componentesPagina.necessidade1P17)){
+					var urlWsNecessidade1 = urlRest+"WsNecessidade1/"+portalParam.diretorioPai+"/"+portalParam.diretorioFilho+"/"+portalParam.seguimentoFiltro+"/"+portalParam.idioma+"/"+portalParam.tempoCache+"" +
+					"/17/8";
+					$http.get(urlWsNecessidade1).success(function(data){ 
+						if (data != ""){  	
+							$scope.necessidade1P17 = data;    			    			
+							$scope.isNecessidade1P17 = true;
+						}
+					}).error(function(data){ });		    	    	
+				}	    	    	
+								
+				/** Chamada ao Web Service para carregamento do componente MaisInfo1 - P 19,8 */   	
+				$scope.isMaisInfo11P19= false;
+				if($scope.componentesPagina.maisInfo1P19){ 
+					
+					var urlWsMaisInfo1 = urlRest+"WsMaisInfo1/"+portalParam.diretorioPai+"/"+portalParam.diretorioFilho+"/"+portalParam.seguimentoFiltro+"/"+portalParam.idioma+"/"+portalParam.tempoCache+"/0"+portalParam.codigoMenuSelecionado;
+					var urlMaisInfo11 = urlWsMaisInfo1+"/19/8";
+					$http.get(urlMaisInfo11).success(function(data){
+						
+						if (data != ""){
+							
+							$scope.maisInfo1P19 = data;
+							
+							if(data.chamada != null && data.chamada.imagem != null){
+								if(data.chamada.imagem.enderecoImagem != null){
+									//console.log("imagem não null");
+									data.chamada["clss_contClass"] = "contClass";  
+									data.chamada["isMaisInfoImg"] = true;  
+								}else{
+									//console.log("imagem null");    				
+									data.chamada["clss_noMargin"] = "noMargin";  
+									data.chamada["clss_newFont"] = "newFont";  
+									data.chamada["isMaisInfoImg"] = false;  
+								}
+							}else{
+								data.chamada["clss_noMargin"] = "noMargin";  
+								data.chamada["clss_newFont"] = "newFont";  
+								data.chamada["isMaisInfoImg"] = false;   
+							}	    	    			
+							$scope.isMaisInfo1P19 = true;   	    	    			    			
+						}	    	    		
+					}).error(function(data){
+					});	    	    	
+				}		  
+				
+				/** Chamada ao Web Service para carregamento do componente Agenda-Home  */
+				$scope.isAgendaHome = false;
+		
+		
+				var urlWsAgendaHome = urlRest+"WsAgendaHome/"+portalParam.diretorioPai+"/"+portalParam.diretorioFilho+"/"+portalParam.seguimentoFiltro+"/"+portalParam.idioma+"/"+portalParam.tempoCache+"/32"+"/2";
+				$http.get(urlWsAgendaHome).success(function(data){
+					if (data != ""){
+						// if(document.location.href.indexOf('localhost') != -1) data.evento1[2].descricao = '';//'http://www.google.com.br' //apagar
+						$scope.agendaHome = data;
+						$scope.isAgendaHome = true;
+					}
+				}).error(function(data){
+					//console.error("Erro em carregar dados de agendaHome ... "+data);
+				});
+				
+				
+				/** Chamada ao Web Service para carregamento do componente boxTextoCallP9  */
+				$scope.isBoxTextoCallP9 = false;
+				if($scope.componentesPagina.boxTextoCallP9){ 
+					var urlWsBoxTextoCall = urlRest+"WsBoxTextoCall/"+portalParam.diretorioPai+"/"+portalParam.diretorioFilho+"/"+portalParam.seguimentoFiltro+"/"+portalParam.idioma+"/"+portalParam.tempoCache+"/9";
+					$http.get(urlWsBoxTextoCall).success(function(data){
+						if (data != ""){
+							$scope.boxTextoCallP9 = data;
+							$scope.isBoxTextoCallP9 = true;
+						}
+					}).error(function(data){
+					});
+				
+				}
+				
+				/** Chamada ao Web Service para carregamento do componente boxTextoCallP10  */
+				$scope.isBoxTextoCallP10 = false;
+				if($scope.componentesPagina.boxTextoCallP10){ 
+					var urlWsBoxTextoCall = urlRest+"WsBoxTextoCall/"+portalParam.diretorioPai+"/"+portalParam.diretorioFilho+"/"+portalParam.seguimentoFiltro+"/"+portalParam.idioma+"/"+portalParam.tempoCache+"/10";
+					$http.get(urlWsBoxTextoCall).success(function(data){
+						if (data != ""){
+							$scope.boxTextoCallP10 = data;
+							$scope.isBoxTextoCallP10 = true;
+						}
+					}).error(function(data){
+					});
+				
+				}
+				
+				/** Chamada ao Web Service para carregamento dos componentes Disclaimer */    	
+				$scope.isDisclaimer = false;
+				if($scope.componentesPagina.disclaimer){	
+				
+					var urlWsNoticia = urlRest+"WsNoticia/"+portalParam.diretorioPai+"/"+portalParam.diretorioFilho+"/21/"+portalParam.seguimentoFiltro+"/"+portalParam.idioma+"/"+portalParam.tempoCache+"/1";
+					$http.get(urlWsNoticia).success(function(data){
+						
+						if (data != ""){ 
+							$scope.disclaimer = data;    			
+							$scope.isDisclaimer = true;
+						}
+					}).error(function(data){    		    		
+					});
+				}	
+
+				$scope.go = function ( path ) {
+				  document.location.href = path;
+				};
+				
+				
+				
+				
+				
+				
+				
+				
+								
+			}
+		});
+		
+		
+		
+		
+	
+		/**
+		 * Chamada ao Web Service para carregamento do componente Footer
+		 */
+		
+		$scope.isFooter = false;
+		
+		var urlWs = urlRest+"WsFooter/"+portalParam.diretorioPai+"/"+portalParam.diretorioFilho+"/"+portalParam.seguimentoFiltro+"/"+portalParam.idioma+"/"+portalParam.tempoCache+"/0"+portalParam.codigoMenuSelecionado+"/"+portalParam.flagFooter;
+		$http.get(urlWs).success(function(data){
+			if (data != ""){
+				$scope.footer = data;
+				$scope.isfooter = true;
+			}
+		}).error(function(data){
+			//alert("Erro em carregar dados da footer ... "+data);
+			
+		});
+
+		
+		//Recursos que serão usados no template. 
+		var mapeado = false;
+	
+		$scope.verificaEncavalamento = function(statusBusca, statusDestaque){
+			
+			if(statusBusca){
+				return "encavalarBusca";
+			} else if (statusDestaque){
+				return "encavalar";
+			} else { 
+				return "";
+			}  			
+		};
+		
+		
+			
+	} 
+	return controllerT001;
+});

@@ -1,0 +1,44 @@
+'use strict';
+
+var arrayWriteList = portalParam.writeListURLs;
+
+//var URL = "http://localhost:8080/pbb/s001t014p001,999262,999202,1,1,1,1.bb#/";
+
+var urlRedirecionamento = "/pbb/pagina-inicial/siteExterno/pt";
+
+if(portalParam.idioma == '2'){
+	urlRedirecionamento = "/pbb/pagina-inicial/siteExterno/en";	
+}
+
+$("a").click(function(event){
+    
+	var urlDestino = $(this).attr('href');
+	
+	if(typeof urlDestino !== "undefined" && urlDestino.trim() != ""){
+		 
+		var existeValorUrl = false;
+		
+		for(var i in arrayWriteList){
+			if(urlDestino.indexOf(arrayWriteList[i]) !== -1){
+				existeValorUrl = true;
+				break;
+			}
+		}
+		
+        if(!existeValorUrl){
+        	
+   		  event.preventDefault();
+   		  
+   		  localStorage.removeItem("urlDestino");
+   		  localStorage.setItem("urlDestino", urlDestino);
+   		  
+   		  window.open(urlRedirecionamento);
+        }else{
+        	localStorage.removeItem("urlDestino");
+        }
+	}
+});
+
+
+
+

@@ -1,0 +1,370 @@
+/* line 2, components/_destaque-busca-home.scss */
+.clssNone {
+  display: none;
+}
+
+/* line 3, components/_destaque-busca-home.scss */
+.destaque-busca-home {
+  min-width: 100%;
+  background: #ccc;
+}
+/* line 10, components/_destaque-busca-home.scss */
+.destaque-busca-home .desktop {
+  display: block;
+} 
+/* line 13, components/_destaque-busca-home.scss */
+.destaque-busca-home .tablet {
+  display: none;
+}
+/* line 16, components/_destaque-busca-home.scss */
+.destaque-busca-home .smartphone {
+  display: none;
+}
+/* line 19, components/_destaque-busca-home.scss */
+.destaque-busca-home .wrap-banner {
+  position: relative;
+}
+/* line 22, components/_destaque-busca-home.scss */
+.destaque-busca-home .container {
+  max-width: 990px;
+  margin: 0 auto;
+  padding: 50px 0px;
+}
+/* line 28, components/_destaque-busca-home.scss */
+.destaque-busca-home .container .link-banner {
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  left: 0;
+  top: 0;
+  display: block;
+  z-index: 2;
+}
+/* line 37, components/_destaque-busca-home.scss */
+.destaque-busca-home .container .busca_home {
+  display: inline-block;
+  width: 400px;
+  cursor: default;
+  padding-left: 30px;
+  margin-top: 79px;
+  position: relative;
+  z-index: 3;
+}
+/* line 45, components/_destaque-busca-home.scss */
+.destaque-busca-home .container .busca_home .wrap-titulo {
+  position: relative;
+  width: 82%;
+  height: 150px;
+  margin-bottom: 10px;
+}
+/* line 51, components/_destaque-busca-home.scss */
+.destaque-busca-home .container .busca_home h1 {
+  color: #215197;
+  font-size: 48px;
+  line-height: 50px;
+  text-align: left;
+  font-weight: normal;
+  width: 100%;
+  overflow: hidden;
+  position: absolute;
+  bottom: 0;
+  left: 0;
+}
+/* line 65, components/_destaque-busca-home.scss */
+.destaque-busca-home .container .busca_home h2 {
+  color: #215197;
+  font-size: 18px;
+  text-align: left;
+  margin-bottom: 10px;
+  font-weight: normal;
+  letter-spacing: 0.02px;
+  line-height: 20px;
+  height: 30px;
+}
+/* line 76, components/_destaque-busca-home.scss */
+.destaque-busca-home .container .busca_home h3 {
+  color: #215197;
+  font-size: 14px;
+  text-align: left;
+  font-weight: normal;
+  letter-spacing: 0.005px;
+  line-height: 22px;
+}
+/* line 83, components/_destaque-busca-home.scss */
+.destaque-busca-home .container .busca_home h3 a {
+  color: #0a67a2;
+  font-weight: normal;
+  text-decoration: underline;
+}
+/* line 87, components/_destaque-busca-home.scss */
+.destaque-busca-home .container .busca_home h3 a span {
+  text-decoration: none;
+}
+/* line 93, components/_destaque-busca-home.scss */
+.destaque-busca-home .container .busca_home fieldset {
+  margin: 0 auto;
+  margin-bottom: 0px;
+  width: 100%;
+  max-width: 420px;
+  text-align: left;
+  display: inline-block;
+  height: 64px;
+}
+/* line 102, components/_destaque-busca-home.scss */
+.destaque-busca-home .container .busca_home fieldset input {
+  -moz-border-bottom-colors: none;
+  -moz-border-image: none;
+  -moz-border-left-colors: none;
+  -moz-border-right-colors: none;
+  -moz-border-top-colors: none;
+  border-color: #f4d13f transparent #f4d13f #f4d13f;
+  border-radius: 4px 4px 4px 4px;
+  border-style: solid;
+  border-width: 2px 70px 2px 2px;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1) inset;
+  float: left;
+  font-size: 30px;
+  height: 100%;
+  line-height: 32px;
+  margin-right: -71px;
+  padding: 0 20px;
+  width: 100%;
+}
+/* line 123, components/_destaque-busca-home.scss */
+.destaque-busca-home .container .busca_home fieldset button {
+  background: none repeat scroll 0 0 #f4d13f;
+  -moz-border-radius-topright: 4px;
+  -webkit-border-top-right-radius: 4px;
+  border-top-right-radius: 4px;
+  -moz-border-radius-bottomright: 4px;
+  -webkit-border-bottom-right-radius: 4px;
+  border-bottom-right-radius: 4px;
+  color: #23569c;
+  float: left;
+  font-size: 22px;
+  height: 100%;
+  width: 71px;
+}
+/* line 133, components/_destaque-busca-home.scss */
+.destaque-busca-home .container .busca_home fieldset button i {
+  width: 20px;
+  display: block;
+  margin: 0 auto;
+  margin-top: 0px;
+  margin-bottom: 0px;
+}
+
+@media (max-width: 768px) {
+  /* line 3, components/tablet/_destaque-busca-home.scss */
+  .destaque-busca-home .desktop {
+    display: none;
+  }
+  /* line 6, components/tablet/_destaque-busca-home.scss */
+  .destaque-busca-home .tablet {
+    display: block;
+  }
+  /* line 9, components/tablet/_destaque-busca-home.scss */
+  .destaque-busca-home .smartphone {
+    display: none;
+  }
+  /* line 13, components/tablet/_destaque-busca-home.scss */
+  .destaque-busca-home .container {
+    padding: 0px 30px;
+  }
+  /* line 20, components/tablet/_destaque-busca-home.scss */
+  .destaque-busca-home .container .busca_home {
+    width: 304px;
+    margin-top: 44px;
+    padding-left: 0px;
+  }
+  /* line 25, components/tablet/_destaque-busca-home.scss */
+  .destaque-busca-home .container .busca_home .wrap-titulo {
+    width: 220px;
+  }
+  /* line 29, components/tablet/_destaque-busca-home.scss */
+  .destaque-busca-home .container .busca_home h1 {
+    font-size: 36px;
+    line-height: 39px;
+    height: auto;
+    overflow: visible;
+    vertical-align: baseline;
+  }
+  /* line 38, components/tablet/_destaque-busca-home.scss */
+  .destaque-busca-home .container .busca_home h2 {
+    font-size: 19px;
+    height: 22px;
+    overflow: hidden;
+  }
+  /* line 44, components/tablet/_destaque-busca-home.scss */
+  .destaque-busca-home .container .busca_home h3 {
+    font-size: 11px;
+    line-height: 16px;
+    padding-top: 5px;
+  }
+  /* line 49, components/tablet/_destaque-busca-home.scss */
+  .destaque-busca-home .container .busca_home h3 a {
+    font-size: 11px;
+  }
+  /* line 54, components/tablet/_destaque-busca-home.scss */
+  .destaque-busca-home .container .busca_home fieldset {
+    height: 48px;
+  }
+  /* line 57, components/tablet/_destaque-busca-home.scss */
+  .destaque-busca-home .container .busca_home fieldset input {
+    font-size: 29px;
+    line-height: 48px;
+    margin-right: -54px;
+    padding: 0 4px 0 12px;
+  }
+  /* line 63, components/tablet/_destaque-busca-home.scss */
+  .destaque-busca-home .container .busca_home fieldset button {
+    width: 54px;
+    font-size: 22px;
+  }
+}
+@media (max-width: 667px) {
+  /* line 3, components/smartphone/_destaque-busca-home.scss */
+  .destaque-busca-home .desktop {
+    display: none;
+  }
+  /* line 6, components/smartphone/_destaque-busca-home.scss */
+  .destaque-busca-home .tablet {
+    display: none;
+  }
+  /* line 9, components/smartphone/_destaque-busca-home.scss */
+  .destaque-busca-home .smartphone {
+    display: block;
+  }
+  /* line 13, components/smartphone/_destaque-busca-home.scss */
+  .destaque-busca-home .container {
+    padding: 0px 20px;
+  }
+  /* line 16, components/smartphone/_destaque-busca-home.scss */
+  .destaque-busca-home .container .busca_home {
+    width: 100%;
+    padding-left: 0px;
+    margin-top: 101px;
+  }
+  /* line 22, components/smartphone/_destaque-busca-home.scss */
+  .destaque-busca-home .container .busca_home h1 {
+    font-size: 32px;
+    line-height: 35px;
+    height: auto;
+    width: 211px;
+    overflow: visible;
+    vertical-align: baseline;
+  }
+  /* line 31, components/smartphone/_destaque-busca-home.scss */
+  .destaque-busca-home .container .busca_home h2 {
+    font-size: 16px;
+    line-height: 18px;
+    height: 23px;
+  }
+  /* line 38, components/smartphone/_destaque-busca-home.scss */
+  .destaque-busca-home .container .busca_home h3 {
+    font-size: 13px;
+    line-height: 15px;
+    padding-top: 10px;
+  }
+  /* line 42, components/smartphone/_destaque-busca-home.scss */
+  .destaque-busca-home .container .busca_home h3 a {
+    font-size: 13px;
+    line-height: 16px;
+  }
+  /* line 48, components/smartphone/_destaque-busca-home.scss */
+  .destaque-busca-home .container .busca_home fieldset {
+    height: 48px;
+    max-width: 320px;
+  }
+  /* line 52, components/smartphone/_destaque-busca-home.scss */
+  .destaque-busca-home .container .busca_home fieldset input {
+    font-size: 26px;
+    line-height: 28px;
+    padding: 0 10px;
+    width: 100%;
+    margin-right: -53px;
+    border-width: 1px 53px 1px 1px;
+  }
+  /* line 61, components/smartphone/_destaque-busca-home.scss */
+  .destaque-busca-home .container .busca_home fieldset button {
+    width: 53px;
+    font-size: 17px;
+  }
+  /* line 64, components/smartphone/_destaque-busca-home.scss */
+  .destaque-busca-home .container .busca_home fieldset button i {
+    width: 36px;
+  }
+}
+@media (max-width: 335px) {
+  /* line 3, components/low-smartphone/_destaque-busca-home.scss */
+  .destaque-busca-home .desktop {
+    display: none;
+  }
+  /* line 6, components/low-smartphone/_destaque-busca-home.scss */
+  .destaque-busca-home .tablet {
+    display: none;
+  }
+  /* line 9, components/low-smartphone/_destaque-busca-home.scss */
+  .destaque-busca-home .smartphone {
+    display: block;
+  }
+  /* line 13, components/low-smartphone/_destaque-busca-home.scss */
+  .destaque-busca-home .container {
+    padding: 0px 20px;
+  }
+  /* line 16, components/low-smartphone/_destaque-busca-home.scss */
+  .destaque-busca-home .container .busca_home {
+    width: 100%;
+    padding-left: 0px;
+    margin-top: 80px;
+  }
+  /* line 22, components/low-smartphone/_destaque-busca-home.scss */
+  .destaque-busca-home .container .busca_home h1 {
+    font-size: 32px;
+    line-height: 35px;
+    height: auto;
+    width: 211px;
+    overflow: visible;
+    vertical-align: baseline;
+  }
+  /* line 31, components/low-smartphone/_destaque-busca-home.scss */
+  .destaque-busca-home .container .busca_home h2 {
+    font-size: 16px;
+    line-height: 18px;
+    height: 23px;
+  }
+  /* line 38, components/low-smartphone/_destaque-busca-home.scss */
+  .destaque-busca-home .container .busca_home h3 {
+    font-size: 13px;
+    line-height: 15px;
+    padding-top: 10px;
+  }
+  /* line 42, components/low-smartphone/_destaque-busca-home.scss */
+  .destaque-busca-home .container .busca_home h3 a {
+    font-size: 13px;
+    line-height: 16px;
+  }
+  /* line 48, components/low-smartphone/_destaque-busca-home.scss */
+  .destaque-busca-home .container .busca_home fieldset {
+    height: 48px;
+    max-width: 320px;
+  }
+  /* line 52, components/low-smartphone/_destaque-busca-home.scss */
+  .destaque-busca-home .container .busca_home fieldset input {
+    font-size: 26px;
+    line-height: 28px;
+    padding: 0 10px;
+    width: 100%;
+    margin-right: -53px;
+    border-width: 1px 53px 1px 1px;
+  }
+  /* line 61, components/low-smartphone/_destaque-busca-home.scss */
+  .destaque-busca-home .container .busca_home fieldset button {
+    width: 53px;
+    font-size: 17px;
+  }
+  /* line 64, components/low-smartphone/_destaque-busca-home.scss */
+  .destaque-busca-home .container .busca_home fieldset button i {
+    width: 36px;
+  }
+}

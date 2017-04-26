@@ -1,0 +1,273 @@
+'use strict';
+  $(document).click(function(event) {
+    var elsClose = {
+        "#box-input" : "#retornoFC",
+        "#inputNecessidade, #boxSelect i" : "#retornoSelect"
+    }
+    $.each(elsClose, function( index, value ) {
+        if(!$(event.target).closest(index).length) {
+            if($(elsClose[index]).is(":visible")) {
+                if(index.indexOf(',') != -1) {
+                    var spl = index.split(',');
+                    index = spl[0];
+                }
+                $(index).click();
+            }
+        }
+    });
+  });
+
+
+  
+  //Ativa o modo debug
+  var modoDebug = false;
+  //ATIVA OU DESATIVA MENSURACAO true ativa | false desativa
+  var ativaDesativaMensuracao = true;
+  var ativaDesativaMensuracaoENI = false;
+  var eni = {};
+  var isENI = false;
+  var pesquisa = false;
+  var isAnalitics = false; 
+  var tmAnalyticsProtec = null;
+  var tmAnalytics = null;
+  var timerProtecGTM = null;
+  var timerGTM = null;
+  var isGTM = false;
+  var dataLayer = [];	
+  var timerNaveg= null;
+  var timerProtecNaveg = null;
+  var isNaveg= null;
+  var mensurarClique = function(param){}
+  var mensurarAcesso = function(param){}
+  
+  
+  if(ativaDesativaMensuracao){
+	timerGTM = setTimeout(function(){
+		(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
+			new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],
+			j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
+			'https://www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);
+			})(window,document,'script','dataLayer','GTM-TZPRH8');
+		
+		isGTM = true;
+		
+		if(modoDebug)
+		console.log("Carreguei GTM");
+		
+		clearTimeout(timerProtecGTM);
+	},100);
+	
+	timerProtecGTM = setTimeout(function(){
+		if(modoDebug)
+		console.log("proteção ativada! GTM ");
+		
+		clearTimeout(timerGTM);
+	},3000);
+	
+	
+	timerNaveg = setTimeout(function(){
+		(function(w,d,s){var f=d.getElementsByTagName(s)[0], j=d.createElement(s); j.async=false; j.id="navegg"; j.src='/pbb/app/docs/comum/js/vendors/naveg/tm41493.js?v='+portalParam.versaoPortal;f.parentNode.insertBefore(j,f);})(window,document,'script');
+		isNaveg = true;
+		
+		if(modoDebug)
+			console.log("Carreguei Naveg");
+			clearTimeout(timerNaveg);
+	},100);
+	
+	timerProtecNaveg = setTimeout(function(){
+		if(modoDebug)
+			console.log("proteção ativada! Naveg ");
+		clearTimeout(timerNaveg);
+	},3000);
+	
+	
+	if(ativaDesativaMensuracaoENI){
+		
+		var tentativas = 0;
+		
+		var tmENI = setTimeout(function(){
+			 var servicecal = document.createElement('script'); 
+			  servicecal.type = 'text/javascript'; 
+			  servicecal.async = true; 
+			  servicecal.src = window.location.protocol + '//www57.bb.com.br/eni/APPS/arquivos/id.js';
+			  document.getElementsByTagName('head')[0].appendChild(servicecal);
+			  
+	  		var ativarFuncsENI = function(){
+		  	  try{
+					eni = new IdentificadorBB(); 
+			    	var mensurarAcesso  = function () {
+						eni.gravaCookieCliente();
+			            eni.contaURL(1, 2, portalParam.mci+portalParam.timesTamp+document.URL ,'');
+			            
+			            if(modoDebug)
+			            console.log("mensurando ENI", portalParam.mci+portalParam.timesTampServidor+document.URL);
+			            
+			            isENI = true;
+			        }
+					mensurarAcesso();
+			        
+			        
+				}catch(e){
+					console.log("Erro ao carregar ENI", "reiniciando... tentativa: "+tentativas+" de 10");
+					isENI = false;
+					if(tentativas < 10){
+						setTimeout(function(){
+							ativarFuncsENI();
+						},100);
+						tentativas++;
+					}
+					
+				}
+		  	}
+	  		
+	  		if(modoDebug)
+			console.log("carreguei ENI");
+			
+			ativarFuncsENI();
+			
+		},100);
+		
+
+		
+		
+	}
+	
+  }
+  
+
+  	var replaceAll = function (txt, replace, with_this) {
+  		  txt = txt+"";
+ 			return txt.replace(new RegExp(replace, 'g'),with_this);
+  	}
+  	
+	var contFunc = 0;
+  	var funcionalidadesMensuraveis = setTimeout(function(){
+  			if(contFunc == 10){
+  				clearTimeout(clefuncionalidadesMensuraveis);	
+  			}else{
+  				funcionalidadesMensuraveis;
+  			}
+  			contFunc++;	
+  	},300);	
+  	
+    if(ativaDesativaMensuracao){
+  	
+    	dataLayer.push({
+	            'event' : 'pageTrack' , 
+	         'PNPagina' :  portalParam.gtm.pnp, 
+	  'segmentoCliente' :  portalParam.gtm.segmentoCliente,
+	  		 'areaSite' :  portalParam.gtm.areaSite,
+	 'categoriaProduto' :  portalParam.gtm.categoria, 
+	      'necessidade' :  portalParam.gtm.necessidade,
+	       'modalidade' :  portalParam.gtm.modalidade
+	    });
+    
+	  	if(modoDebug){
+	  
+			var consoleLog = "event : pageTrack \n " +
+			"pnp: "+ portalParam.gtm.pnp +"\n"+
+			"segmentoCliente: "+portalParam.gtm.segmentoCliente+"\n"+
+			"areaSite : "+portalParam.gtm.areaSite +"\n"+
+			"categoriaProduto : "+ portalParam.gtm.categoria +"\n"+
+			"necessidade :  "+ portalParam.gtm.necessidade +"\n"+
+		    "modalidade :  "+ portalParam.gtm.modalidade +"\n"+
+			"menuBeam :  "+ portalParam.menuBean[0].codigo +"\n";
+			
+			console.log(consoleLog); 
+				
+		}  	
+	  	
+    }   
+    
+    
+    var mensurar = function(event){
+    	
+    	var atrubutoMensuravel;
+    	var labelComponente;
+    	
+    	if(event.type == 'click'){
+    		atrubutoMensuravel = $(event.currentTarget).attr("data-mensuravel");    		
+    	}else if(event.type == 'keypress'){
+    		atrubutoMensuravel = $(event.currentTarget).attr("data-mensuravel");
+    	}
+    	
+		var dados           = atrubutoMensuravel.split("|");
+		var tipoLeitor      = dados[0].trim();
+		var tipoComponente  = dados[1].trim();
+		
+		
+		if(dados[2] === undefined || dados[2] === null) {
+			dados[2] = "";
+		}		
+		
+		((event.type == 'click') ? labelComponente = dados[2].trim() : labelComponente = $(event.currentTarget).val());			
+		
+		if(dados[3] === undefined || dados[3] === null || dados[3] === "") {
+			dados[3] = "0";
+		}
+		
+		var codComponente = dados[3].trim();
+		
+				
+		if(tipoLeitor == "an"){
+			if(modoDebug){
+	  				console.log(
+	  						  ' Mensurando (Analytics) GAEvent '
+	  						+ ' \n eventoCategoria: ' +  portalParam.gtm.segmentoCliente+((typeof portalParam.gtm.categoria !== 'undefined' && portalParam.gtm.categoria != "")? '_'+portalParam.gtm.categoria : '')
+	  						+ ' \n eventoAcao: ' +  tipoComponente
+	  				      	+ ' \n eventoRotulo: ' +  labelComponente
+	  				);
+			}
+			 if(ativaDesativaMensuracao){
+	  				dataLayer.push({
+		                'event' : 'GAEvent' , 
+		      'eventoCategoria' :  portalParam.gtm.segmentoCliente+((typeof portalParam.gtm.categoria !== 'undefined' && portalParam.gtm.categoria != "")? "_"+portalParam.gtm.categoria : ""), 
+		      	   'eventoAcao' :  tipoComponente,
+		      	 'eventoRotulo' :  labelComponente
+		      		 });
+			 }
+	  				
+		}else if(tipoLeitor == "an-eni"){
+			if(modoDebug){
+	  				console.log(
+	  						  ' Mensurando (Analytics e ENI GAEvent) ' 
+	  						+ '	\n eventoCategoria: '+  portalParam.gtm.segmentoCliente+((typeof portalParam.gtm.categoria !== 'undefined' && portalParam.gtm.categoria != "")? '_'+portalParam.gtm.categoria : '')
+	  						+ ' \n eventoAcao: ' +  tipoComponente
+	  				      	+ ' \n eventoRotulo: ' +  labelComponente
+	  				);
+			}
+			 if(ativaDesativaMensuracao){
+		  				//analitics - com googleTagManager
+		  				dataLayer.push({
+			                'event' : 'GAEvent' , 
+			      'eventoCategoria' :  portalParam.gtm.segmentoCliente+((typeof portalParam.gtm.categoria !== 'undefined' && portalParam.gtm.categoria != "")? "_"+portalParam.gtm.categoria : ""), 
+			      	   'eventoAcao' :  tipoComponente,
+			      	 'eventoRotulo' :  labelComponente
+			      		 });
+			 }
+			 
+	  				if(modoDebug)
+	  				console.log(dataLayer);
+
+				
+		}else{
+					if(modoDebug)		
+					console.log('>>> Parametro Invalido: '+tipoLeitor);
+		}
+		
+    }
+    
+	
+    $('[data-mensuravel]').on('click', function(event) {
+    	
+    	if(!$(this).hasClass("gtm")){
+    		mensurar(event);			
+    	}
+	});
+	
+	$('input.gtm').keypress(function(event) {		
+		if(event.which == 13) {
+	    	mensurar(event);
+	    }
+	});		  		
+

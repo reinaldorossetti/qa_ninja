@@ -1,0 +1,73 @@
+'use strict';
+
+require.config({
+    baseUrl: '/pbb/app/docs/comum/js/', 
+    urlArgs: 'v=' + portalParam.versaoPortal,
+    paths: {
+        angular                 : 'componentes/angular/angular.min',
+        angularRoute            : 'componentes/angular-route/angular-route.min',
+        angularLoader           : 'componentes/angular-loader/angular-loader.min',
+        angularSanitize         : 'componentes/angular-sanitize/angular-sanitize.min',
+        angularUiUtils          : 'componentes/angular-ui-utils/angular-ui-utils.min',
+        angularAria             : 'componentes/angular-aria/angular-aria.min',
+        angularCookies          : 'componentes/angular-cookies/angular-cookies.min',
+        angularlocale          	: 'componentes/angular-i18n/angular-locale_pt-br',
+        text                    : 'componentes/requirejs-text/text',
+        jQuery                  : 'componentes/jQuery/dist/jquery.min',
+        jquery                  : 'componentes/jQuery/dist/jquery.min',
+        jQueryUI                : 'vendors/jquery-ui.min',
+        bootstrapTransitions    : 'vendors/bootstrap.transition',
+        bootstrapCollapse       : 'vendors/bootstrap.collapse',
+        select2                 : 'componentes/select2/select2',
+        iScroll                 : 'vendors/iscroll',
+        shareBar                : 'vendors/share.bar.min',
+        footable                : 'vendors/footable', 
+        mCustomScrollbar        : 'vendors/mCustomScrollbar',
+        moment                  : 'vendors/moment',
+        momentPtBr              : 'vendors/moment.pt-br',
+        reTree       			: 'vendors/reTree.min', 
+        adaptiveDetection       : 'componentes/adaptive-detection/angular-adaptive-detection.min',
+		fullCalendar			: 'vendors/fullcalendar.pt-br.min',
+		massAutoComplete		: 'vendors/massautocomplete.min',
+		d3						: 'vendors/c3/d3.min',
+		c3						: 'vendors/c3/c3.min',
+		util  		            : 'vendors/utils/util',
+		jQueryMask				: 'vendors/jquery.mask.min'
+    },
+    //declarar as dependencias dos modulos aqui
+    shim: {
+        'angular'                 : {'exports' : 'angular'},
+        'angularRoute'            : ['angular'],
+        'angularCookies'          : ['angular'],
+        'angularLoader'           : ['angular'],
+        'angularSanitize'         : ['angular'],
+        'angularAria'             : ['angular'],
+        'angularUiUtils'          : ['angular'],
+        'adaptiveDetection'       : ['angular'],
+        'massAutoComplete'        : ['angular'],
+        'angularlocale'        	  : ['angular'],
+        'bootstrapCollapse'       : ['jQuery'],
+        'footable'                : ['jQuery'],
+        'select2'                 : ['jQuery'],
+        'mCustomScrollbar'        : ['jQuery'],
+        'bootstrapTransitions'    : ['jQuery'],
+        'jQueryUI'                : ['jQuery'],
+        'c3'                	  : ['d3'],
+        'jqueryMask'			  : ['jQuery']	
+    },
+    priority: [
+        'angular',
+        'jQuery',
+    ]
+});
+
+//http://code.angularjs.org/1.2.1/docs/guide/bootstrap#overview_deferred-bootstrap
+window.name = "NG_DEFER_BOOTSTRAP!";
+
+require(['angular','app','jQuery'], function(angular, app) {
+  var $html = angular.element(document.getElementsByTagName('html')[0]);
+  angular.element().ready(function() {
+    angular.resumeBootstrap(['bb']); 
+  });
+  
+});

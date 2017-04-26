@@ -1,0 +1,74 @@
+'use strict';
+define([ 
+	'angular'
+	, 'controllers/controllerInit'
+	, 'controllers/controller'+portalParam.template
+	, 'controllers/controllerError'
+	, 'filters'
+	, 'factories'
+	, 'diretivas'
+	, 'angularRoute'
+	, 'angularSanitize'
+	, 'moment'
+	, 'momentPtBr'
+	, 'jQueryUI'
+	, 'angularAria'
+	, 'angularCookies'
+	, 'angularUiUtils'
+	, 'adaptiveDetection'
+	, 'massAutoComplete'
+	],
+	function(angular, controllerInit, controller, controllerError){
+	
+	
+	var app = angular.module('bb', ['ngRoute'
+							      , 'ngSanitize'
+							      , 'ngAria'
+							      , 'ngCookies'
+							      , 'bb.factories'
+							      , 'bb.diretivas'
+							      , 'bb.filters'
+							      , 'ui.utils'
+							      , 'adaptive.detection'
+							      , 'MassAutoComplete'
+							    ]);
+							    
+	
+	app.config(function($routeProvider, $locationProvider)	{
+	   // remove o # da url 
+	   $locationProvider.html5Mode({
+		   enabled: false,
+		   requireBase: false
+	   }); 
+	   
+	   $routeProvider
+	   .when('/', {          
+		   templateUrl : '/pbb/app/sites/comum/templates/'+portalParam.template+'/'+portalParam.pagina+'.html?nd='+Date.now(),
+		   controller : 'controller'+portalParam.template,
+		   resolve:{'init': controllerInit }
+	   })
+	   .when(portalParam.urlAmigavel, {
+		   templateUrl : '/pbb/app/sites/comum/templates/'+portalParam.template+'/'+portalParam.pagina+'.html?nd='+Date.now(),
+		   controller  : 'controller'+portalParam.template,
+		   resolve:{'init': controllerInit }
+	   })
+	   .when('/404',{
+		   templateUrl : '/pbb/app/sites/comum/error/404.html',
+		   controller : 'controllerError',
+		   resolve:{'init': controllerInit }
+	   })
+	   .otherwise({redirectTo : '/404'});
+	});
+		
+	app.controller('controller'+portalParam.template, controller);
+	app.controller('controllerError', controllerError);
+
+	app.run(['$rootScope','$location',function($rootScope, $location) {
+	  $rootScope.$on("$routeChangeError", function (event, current, previous, rejection) {
+	    $location.path('/404').replace();
+	  });
+	}]);
+	
+
+});
+

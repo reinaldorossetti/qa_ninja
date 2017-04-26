@@ -1,0 +1,1 @@
+window.PM.Session.newVisitorRequestCallback({"appKey":"u0jwbb","siteid":1,"sid":"78018fe4-1b7c-ea6f-d2e2-2f0603a09733","ip":"201.7.97.253","ortc":{"url":"http://www70.bb.com.br/server/2.1","secureUrl":"https://www70.bb.com.br/server/ssl/2.1","cluster":true,"token":"PM.Anonymous","heartbeat":{"fails":3,"time":10}}})

@@ -1,0 +1,53 @@
+define([], function() {
+    'use strict';
+
+    function controllerError($scope, $http, $sce, fDescritorPaginas, fHeader,fMigalha,$location,$portalUtil,$customizacao) {
+    	//antigo p006 
+    	//Declaração de urls para uso do controller
+    	var urlRest = "/pbb/rest/"; 
+    	
+
+			/** Componente Header */
+    		$scope.isheader = false;
+        
+        	fHeader.getComponente().then(function(response) {
+                if (response.success) {
+                	if(response.componente != ""){
+                		$scope.header = response.componente;
+	            		$scope.isHeader = true;
+	                }
+                 }
+            });               	
+    debugger    	
+        	$scope.isInput = $customizacao.is("erro.inputBuscar");;
+        	$scope.inputBusca = {};
+        	$scope.inputBusca.value = "";
+        	var urlSemParam = $location.absUrl().split('=')[0];
+            $scope.redirectBusca = function(input){
+             	input = (typeof(input) == "undefined")? "":input;
+             	var urlSeg = $portalUtil.getURLBusca(portalParam.seguimento);
+             	localStorage.clear();
+             	document.location.href = urlSeg+"?search="+encodeURIComponent(input);	
+    		}; 
+    		
+        	/**
+	    	 * Chamada ao Web Service para carregamento do componente Footer
+	    	 */        	
+        	
+	    	$scope.isFooter = false;
+	    	
+	    	var urlWs = urlRest+"WsFooter/"+portalParam.diretorioPai+"/"+portalParam.diretorioFilho+"/"+portalParam.seguimentoFiltro+"/"+portalParam.idioma+"/"+portalParam.tempoCache+"/0"+portalParam.codigoMenuSelecionado+"/"+portalParam.flagFooter;
+	    	$http.get(urlWs).success(function(data){
+	    		if (data != ""){
+		    		$scope.footer = data;
+		    		$scope.isfooter = true;
+	    		}
+	    	}).error(function(data){
+	    		
+	    	});
+
+
+    	   	
+    } 
+    return controllerError;
+});

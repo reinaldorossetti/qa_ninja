@@ -1,0 +1,759 @@
+'use strict';
+
+/* Factories */
+define(['angular', 'helpers'], function (angular) {
+  var urlRest = "/pbb/rest/"; 
+  angular.module('bb.factories', [])
+  .factory('fDescritorPaginas', function($http, $q) {
+      var service = {};
+      service.getComponente = function() {
+        var deferred = $q.defer();
+        $http({
+          url: '/pbb/servicos/?servicodescritor=sim&site='+portalParam.site+'&template='+portalParam.template+'&pagina='+portalParam.pagina ,
+          dataType: 'json',
+          contentType: 'application/json',
+          method: 'GET'
+        }).success(function(response, status, headers, config) {
+          deferred.resolve({
+            success: status == 200,
+            componente: response,
+          });
+        }).error(function(response, status, headers, config) {
+          deferred.resolve({
+            success: status == 200
+          });
+        });
+
+        return deferred.promise;
+      };
+
+      return service;
+    })
+    
+    .factory('fMigalha', function($http, $q) {
+      var service = {};
+      
+      service.getDados = function() {
+    	  
+	        var deferred = $q.defer();
+	    	var find = '/';
+	    	var re = new RegExp(find, 'g'); 
+	    	var urlCifrada = portalParam.urlAmigavel.replace(re, '$'); 
+	    	var local = false;
+	    	var urlWsRemota = urlRest+"WsMigalha/"+urlCifrada; 
+	    	var urlWsLocal = "/pbb/app/docs/pdc/mockup/migalha.json";
+	        var urlWs = (local)? urlWsLocal : urlWsRemota;
+		        
+	    	$http({
+	            url: urlWs,
+	            dataType: 'json',
+	            contentType: 'application/json',
+	            method: 'GET'
+	        }).success(function(response, status, headers, config) {
+            
+	        	deferred.resolve({
+	        	success: status == 200,
+	        	dados: response,
+	        	});	
+            }).error(function(response, status, headers, config) {
+            
+            	deferred.resolve({
+            		error: status == 500
+            	});
+            });
+       
+	    	return deferred.promise;
+      };
+      
+      
+      service.getGTM = function() {
+    	  
+	        var deferred = $q.defer();
+	        
+	    	var find = '/';
+	    	var re = new RegExp(find, 'g'); 
+	    	if(portalParam.urlAmigavel != "null"){
+	    		var urlCifrada = portalParam.urlAmigavel.replace(re, '$');	
+	    	}else{
+	    		var urlCifrada = portalParam.url.replace("/pbb/","").replace(".bb",".cc");	
+	    	}
+	    	
+	    	var local = false;
+	    	var urlWsRemota = urlRest+"WsMigalha/gtm/"+portalParam.seguimento+"/"+urlCifrada; 
+	    	var urlWsLocal = "/pbb/app/docs/pdc/mockup/GTM.json";
+	        var urlWs = (local)? urlWsLocal : urlWsRemota;
+		        
+	    	$http({
+	            url: urlWs,
+	            dataType: 'json',
+	            contentType: 'application/json',
+	            method: 'GET'
+	        }).success(function(response, status, headers, config) {
+          
+	        	deferred.resolve({
+	        		success: status == 200,
+	        		dados: response
+	        	});
+	        	
+	        }).error(function(response, status, headers, config) {
+          
+	        	deferred.resolve({
+	        		error: status == 500
+	        	});
+          	});
+	    	  
+	     return deferred.promise;
+      	
+      };
+  	
+      return service;
+    })
+    
+     .factory('fChamadaCompartilhar', function($http, $q) {
+      var service = {};
+      var urlWs = urlRest+"WsChamada/lista/"+portalParam.diretorioFilho+"/79/"+portalParam.idioma+"/0/"+portalParam.tempoCache+"/1";
+      
+      service.getComponente = function() {
+        var deferred = $q.defer();
+        $http({
+          url: urlWs,
+          dataType: 'json',
+          contentType: 'application/json',
+          method: 'GET'
+        }).success(function(response, status) {
+        	deferred.resolve({
+        		success: status == 200,
+        		componente: response
+        	});
+        }).error(function(response, status) {
+        	deferred.resolve({
+        		success: status == 404
+        	});
+        	
+        });
+
+        return deferred.promise;
+      };
+
+      return service;
+    })
+     .factory('fHeader', function($http, $q) {
+      var service = {};
+      var urlWs = urlRest+"WsHeader/"+portalParam.testeira+"/"+portalParam.diretorioPai+"/"+portalParam.diretorioFilho+"/"+portalParam.seguimentoFiltro+"/"+portalParam.idioma+"/"+portalParam.tempoCache+"/0"+portalParam.codigoMenuSelecionado;
+      
+      service.getComponente = function() {
+        var deferred = $q.defer();
+        $http({
+          url: urlWs,
+          dataType: 'json',
+          contentType: 'application/json',
+          method: 'GET'
+        }).success(function(response, status) {
+        	deferred.resolve({
+        		success: status == 200,
+        		componente: response
+        	});
+        	
+        }).error(function(response, status) {
+        	deferred.resolve({
+        		success: status == 404
+        	});
+        	
+        });
+
+        return deferred.promise;
+      };
+
+      return service;
+    })
+    .factory('fBuscaGSA', function($http, $q) { 
+        var service = {};
+        
+        
+        service.buscar = function(site, termo, pag, keyword) {
+        	
+        	var deferred = $q.defer();
+        	//USADA PARA DEFINIR O USO DE UM MOCK.. da busca.
+        	var local = false;
+        	var urlWsGSARemota = (pag == 0 && keyword == "") ? urlRest+"WsGSA/"+site+"/"+termo : urlRest+"WsGSA/"+site+"/"+keyword+"/"+pag+"/"+termo;	
+        	var urlWsGSALocal = "/pbb/app/docs/pdc/mockup/retornoBuscaGSA1.json";
+        	var urlWsGSA = (local)? urlWsGSALocal : urlWsGSARemota;
+        		
+				$http({
+			        url: urlWsGSA,
+			        dataType: 'json',
+			        contentType: 'application/json',
+			        method: 'GET'
+			    }).success(function(response, status, headers, config) {
+	    			deferred.resolve({
+			          success: status == 200,
+			          dados: response,
+			        });
+			    }).error(function(response, status, headers, config) {
+		    		deferred.resolve({
+			          error: status == 500,
+			          dados: response
+			        });
+			    }).catch(function(e){
+			    	deferred.error({
+				          error: true,
+				          dados: ""
+				    });
+			    	return deferred.promise;	
+			    });
+        	return deferred.promise;
+        };
+        
+        service.buscarSugestoes= function(site, termo) {
+        	
+        	var deferred = $q.defer();
+        	
+        	//USADA PARA DEFINIR O USO DE UM MOCK.. da busca.
+        	var local = false;
+        	var urlWsGSARemota = urlRest+"WsGSA/sugestoes/"+site+"/"+termo; 
+        	var urlWsGSALocal = "/pbb/app/docs/pdc/mockup/sugestoesGSA.json";
+
+	        var urlWsGSA = (local)? urlWsGSALocal : urlWsGSARemota;
+	        
+        	$http({
+	            url: urlWsGSA,
+	            dataType: 'json',
+	            contentType: 'application/json',
+	            method: 'GET'
+	        }).success(function(response, status, headers, config) {
+	            
+	        	deferred.resolve({
+	              success: status == 200,
+	              dados: response,
+	            });
+	        	
+	        }).error(function(response, status, headers, config) {
+	            
+	        	deferred.resolve({
+	              error: status == 500
+	            });
+	        	
+	        });
+        	
+        	return deferred.promise;
+        };
+
+        service.buscarDadosComplementares = function(componente) {
+        	var deferred = $q.defer();
+        	
+        	var local = false;
+        	
+        	if(componente == "bbBuscaSemResultado"){
+        		
+        		var urlWsGSARemota = urlRest+"WsBuscaSemResultado/"+portalParam.diretorioPai+"/"+portalParam.diretorioFilho+"/"+portalParam.seguimentoFiltro+"/"+portalParam.idioma+"/"+portalParam.tempoCache;
+            	var urlWsGSALocal = "/pbb/app/docs/pdc/mockup/buscaSemResultado.json";
+            	
+        	}else if(componente == "bbBuscaPrincipal"){
+        		
+        		var urlWsGSARemota = urlRest+"WsBuscaPrincipal/"+portalParam.diretorioPai+"/"+portalParam.diretorioFilho+"/"+portalParam.seguimentoFiltro+"/"+portalParam.idioma+"/"+portalParam.tempoCache; 
+            	var urlWsGSALocal = "/pbb/app/docs/pdc/mockup/buscaPrincipal.json";
+            	
+        	}else if(componente == "bbErroBusca"){
+        		
+        		var urlWsGSARemota = urlRest+"WsChamada/lista/"+portalParam.diretorioFilho+"/2/"+portalParam.idioma+"/0/"+portalParam.tempoCache+"/10"; 
+            	var urlWsGSALocal = "/pbb/app/docs/pdc/mockup/buscaPrincipal.json";
+        		
+        	}
+
+	        var urlWs = (local)? urlWsGSALocal : urlWsGSARemota;
+	  
+	        	$http({
+		            url: urlWs,
+		            dataType: 'json',
+		            contentType: 'application/json',
+		            method: 'GET'
+		        }).success(function(response, status, headers, config) {
+		            
+		        	deferred.resolve({
+		              success: status == 200,
+		              dados: response,
+		            });
+		        	
+		        }).error(function(response, status, headers, config) {
+		            
+		        	deferred.resolve({
+		              error: status == 500
+		            });
+		        	
+		        });
+	        	
+	     
+        	
+        	
+        	return deferred.promise;
+        };
+        
+        return service;
+      })
+      .factory('$cookieUtil', ['$cookies', function($cookies) {
+
+    	    return {
+
+	    	   /**
+    	       * @description
+    	       * Retorna o valor de um cookie.
+    	       */
+    	      get: function(key) {
+    	        return $cookies[key];
+    	      },
+    	      
+    	      /**
+    	       * @description
+    	       * Retorna um array de cookies
+    	       */
+    	      getAll: function() {
+      	        return $cookies;
+      	      },
+      	      
+    	      /**
+    	       * @description
+    	       * Armazena o cookie, pela quantidade de dias
+    	       */
+      	      put: function(cname, cvalue, exdays) {
+    	    	  	var d = new Date();
+	    		    d.setTime(d.getTime() + (exdays*24*60*60*1000));
+	    		    var expires = "expires="+d.toUTCString();
+	    		    document.cookie = cname + "=" + cvalue + "; " + expires;
+
+    	      },
+
+    	      /**
+    	       * @description
+    	       * Remove cookie
+    	       */
+    	      remove: function(key) {
+    	    	  /*
+    	    	  	var d = new Date();
+    	    	    d.setTime(d.getTime() + (-1*24*3600*1000));
+	    		    var expires = "expires="+d.toUTCString();
+	    		    document.cookie = key + "=" + escape("") + ((-1 == null) ? "" : "; " + expires);
+	    		    */  
+    	      } 
+    	    }
+
+    	  }])
+    	  .factory('$fTemporizador', function($timeout) { 
+    		  return {
+        		  
+					timerAtivo: null,
+					temporizarAcao: function(acao,tempo){
+						return  $timeout(function(){
+							acao();
+						}, tempo);
+					},
+			    	cancelar: function(temporizadorParam){
+			    		$timeout.cancel(temporizadorParam);
+			    	}
+  		   }
+ 
+    	  })
+    	  
+    	  .factory('$customizacao',  function($rootScope) {
+  			return {
+  			  /**
+	  		  * @description
+	  		  * Espera uma chave e retorna true ou false, em caso de inexistencia retorna true;
+	  		  **/
+  		      is: function(str_funcionalidade) {
+
+  		    	  var strPesquisa = portalParam.site+"."+str_funcionalidade;
+  		    	  
+  		    	  if(typeof($rootScope.customizacao[strPesquisa]) != "undefined" ){
+  		    		  return $rootScope.customizacao[strPesquisa];
+	  		      }else{
+	  		    	  return false;
+	  		      }
+  		    	  
+  		       }	  
+	 		}
+    	  })
+  		.factory('$portalUtil',  function() {
+  			return {
+  				 /**
+	  		       * @description
+	  		       * Retorna o valor de um cookie.
+	  		       */
+	  		      getTema: function(seguimento) {
+	  		    	  	//VOCE
+	  		    	  	var tema = 1;
+	  		    	
+	  			    	if(seguimento == "6" || seguimento == "9"){
+	  		      			//ESTILO
+	  			    		tema = 6;
+	  		      		}else if(seguimento == "7" || seguimento == "10"){
+	  		      			//PRIVATE
+	  		      			tema = 7;
+	  		      		}
+	  		    	
+	  	    		return tema ;
+	  		      },
+		  		  getPerfil: function(seguimento) {
+		  			  	var perfil = "";
+		  		 
+		  			  	if(seguimento == "1" || seguimento == "6" || seguimento == "7"){	
+		  			  		//PESSOA FISICA
+		  			  		perfil = "pessoaFisica";
+		  			  		
+	  		    	  	}else if(seguimento == "8" || seguimento == "9" || seguimento == "10"){
+	  		      	
+	  		    	  		//EMPRESA
+	  			    		perfil = "pessoaJuridica";
+	  			    		  
+	  		      		}else if(seguimento > 10 && seguimento < 16 ){
+	  		      			
+	  		      			//GOVERNO
+	  		      			perfil = "governo";
+	  		      		}
+	  		    	
+	  	    		return perfil ;
+	  		      },
+		  		  getTituloSeguimento: function(seguimento) {
+		  			  var seguimentoTit = "";
+		  		 
+		  			  switch (seguimento) {
+			  	    	case '1':
+							seguimentoTit = "Voce";
+							break;
+						case '6':
+							seguimentoTit = "Estilo";
+							break;
+						case '7':
+							seguimentoTit = "Private";
+							break;
+						case '8':
+							seguimentoTit = "Empresa";
+							break;
+						case '9':
+							seguimentoTit = "Empresarial";
+							break;
+						case '10':
+							seguimentoTit = "Corporate";
+							break;
+						case '11':
+							seguimentoTit = "ExecutivoFederal";
+							break;
+						case '12':
+							seguimentoTit = "ExecutivoEstadual";
+							break;
+						case '13':
+							seguimentoTit = "ExecutivoMunicipal";
+							break;
+						case '14':
+							seguimentoTit = "Legislativo";
+							break;
+						case '15':
+							seguimentoTit = "Judiciario";
+							break;
+						case '44':
+							seguimentoTit = "LargeCorporate";
+							break;
+						default:
+							seguimentoTit = "OutrosSeguimento";
+							break;
+					}
+
+	  	    		return seguimentoTit;
+	  		      },
+	  		      
+	  		      getTituloSeguimentoAcentuado: function(seguimento) {
+		  			  var seguimentoTit = "";
+		  		 
+		  			  switch (seguimento) {
+			  	    	case '1':
+							seguimentoTit = "Você";
+							break;
+						case '6':
+							seguimentoTit = "Estilo";
+							break;
+						case '7':
+							seguimentoTit = "Private";
+							break;
+						case '8':
+							seguimentoTit = "Empresas";
+							break;
+						case '9':
+							seguimentoTit = "Empresarial";
+							break;
+						case '10':
+							seguimentoTit = "Corporate";
+							break;
+						case '11':
+							seguimentoTit = "Setor Público Federal";
+							break;
+						case '12':
+							seguimentoTit = "Setor Público Estadual";
+							break;
+						case '13':
+							seguimentoTit = "Setor Público Municipal";
+							break;
+						case '14':
+							seguimentoTit = "Setor Público Legislativo";
+							break;
+						case '15':
+							seguimentoTit = "Setor Público Judiciário";
+							break;
+						case '44':
+							seguimentoTit = "Large Corporate";
+							break;
+						default:
+							seguimentoTit = "Outros Segmentos";
+							break;
+					}
+
+	  	    		return seguimentoTit;
+	  		      },
+	  		      
+	  		      UTF8: function(operacao,s) {
+	  		    	if(operacao == "encode"){
+	  		    		for(var c, i = -1, l = (s = s.split("")).length, o = String.fromCharCode; ++i < l;
+	 			            s[i] = (c = s[i].charCodeAt(0)) >= 127 ? o(0xc0 | (c >>> 6)) + o(0x80 | (c & 0x3f)) : s[i]
+	 			        );
+	 			        return s.join("");
+	  		    	} 
+	  		    	if(operacao == "decode"){
+     			        for(var a, b, i = -1, l = (s = s.split("")).length, o = String.fromCharCode, c = "charCodeAt"; ++i < l;
+     			            ((a = s[i][c](0)) & 0x80) &&
+     			            (s[i] = (a & 0xfc) == 0xc0 && ((b = s[i + 1][c](0)) & 0xc0) == 0x80 ?
+     			            o(((a & 0x03) << 6) + (b & 0x3f)) : o(128), s[++i] = "")
+     			        );
+     			        return s.join("");
+     			    }
+	  		      },
+	  		      
+	  		      getURLBusca: function(seguimento) {
+		  			  var urlBusca = "/pbb/pagina-inicial";
+		  			  var urlBuscaPadrao = "/pbb/busca";
+		  			
+		  			  switch (seguimento) {
+			  	    	case '1':
+			  	    		urlBusca += "/voce/busca";
+							break;
+						case '6':
+							urlBusca += "/estilo/busca";
+							break;
+						case '7':
+							urlBusca += "/private/busca";
+							break;
+						case '8':
+							urlBusca += "/empresas/busca";
+							break;
+						case '9':
+							urlBusca += "/empresarial/busca";
+							break;
+						case '10':
+							urlBusca += "/corporate/busca";
+							break;
+						case '11':
+							urlBusca = urlBuscaPadrao;//ExecutivoFederal
+							break;
+						case '12':
+							urlBusca = urlBuscaPadrao;//ExecutivoEstadual
+							break;
+						case '13':
+							urlBusca = urlBuscaPadrao;//ExecutivoMunicipal
+							break;
+						case '14':
+							urlBusca = urlBuscaPadrao;//Legislativo
+							break;
+						case '15':
+							urlBusca = urlBuscaPadrao;//Judiciario
+							break;
+						case '44':
+							urlBusca = urlBuscaPadrao;//LargeCorporate
+							break;
+						case '101':
+							urlBusca += "/search";
+							break;
+						default:
+							urlBusca = urlBuscaPadrao;
+							break;
+					}
+
+	  	    		return urlBusca;
+	  		      },
+	  		      
+		  		  getTermoTratado: function(termo) {
+		  			var termoTratado = "";
+		  			termoTratado  = termo.replace(" "+this.getTituloSeguimento(portalParam.seguimento),"")
+		  		 	return termoTratado ;
+	  		      },
+	  		      
+	  		      check: function(string) {
+	  		    	string = string+"";
+    	    		var stringTratada = string.replace(/[\$\%\\\/]/g, "");
+    	    		return stringTratada;
+	  		      }
+  			}
+  		})
+  
+		.factory('fMapaDoSite', function($http, $q) {
+		      var service = {};
+		      service.getComponente = function() {
+		        var deferred = $q.defer();
+		        $http({
+		          url: '/menugen/mapaBuscaPortal.json',
+		          headers: {
+		              "Accept": "application/json;charset=utf-8",
+		              "Accept-Charset":"charset=utf-8"
+		          },		          
+		          dataType: 'json',
+		          contentType: 'application/json;charset=utf-8',
+		          method: 'GET'
+		        }).success(function(response, status, headers, config) {
+		          deferred.resolve({
+		            success: status == 200,
+		            componente: response,
+		          });
+		        }).error(function(response, status, headers, config) {
+		          deferred.resolve({
+		            success: status == 200
+		          });
+		        });
+		
+		        return deferred.promise;
+		      };
+		
+		      return service;
+		      
+		})
+		.factory('fRedSiteExt', function() {
+			
+			var acao = {}; 
+
+			var urlRedirecionamento = "/pbb/pagina-inicial/siteExterno/pt";
+			
+			if(portalParam.idioma == '2'){
+				urlRedirecionamento = "/pbb/pagina-inicial/siteExterno/en";	
+			}
+			
+			acao.redirecionarSiteExterno = function(urlDestino) {
+	          
+				if(typeof urlDestino !== "undefined" && urlDestino.trim() != ""){
+					
+					var existeValorUrl = false;
+					
+					for(var i in portalParam.writeListURLs){
+						if(urlDestino.indexOf(portalParam.writeListURLs[i]) !== -1){
+							existeValorUrl = true;
+							break;
+						}
+					}
+			        if(!existeValorUrl){
+			        	
+		       		  localStorage.removeItem("urlDestino");
+		              localStorage.setItem("urlDestino", urlDestino);
+				      window.open(urlRedirecionamento);
+					   
+			        }else{
+			           localStorage.removeItem("urlDestino");
+			           document.location.href = urlDestino;
+			       }
+				}
+			};
+			return acao;
+
+		})
+		.factory('fBuscaAcoesInterna', function($http, $q) {
+			var service = {};
+			service.getDados = function(urlBase) {		    	       
+				var urlWs = urlBase+"WsAcoesInterna/"+portalParam.diretorioPai+"/"+portalParam.diretorioFilho+"/"+portalParam.seguimentoFiltro+"/"+portalParam.idioma+"/"+portalParam.tempoCache+"/38";
+				var deferred = $q.defer();
+				
+				$http.get(urlWs)
+			    .success(function success(data){
+			    	deferred.resolve(data);
+			    })
+			    .error(function(){
+			    	deferred.resolve({
+			    		success: status == 200
+			    	})
+			    });
+			    
+			    return deferred.promise;
+			}
+		
+			return service;
+		})
+		.factory('fBuscaAcoesHome', function($http, $q) {
+		 
+			var service = {};
+			service.getDados = function(urlBase) {		    	       
+				var urlWs = urlBase+"WsAcoesHome/"+portalParam.diretorioPai+"/"+portalParam.diretorioFilho+"/"+portalParam.seguimentoFiltro+"/"+portalParam.idioma+"/"+portalParam.tempoCache+"/37";
+				var deferred = $q.defer();
+				
+			    $http.get(urlWs)
+			    .success(function success(data){
+			    	deferred.resolve(data);
+			    })
+			    .error(function(){
+			    	deferred.resolve({
+			    		success: status == 200
+			    	})
+			    });
+			    
+			    return deferred.promise;
+			}
+		
+			return service;
+		})
+		.filter('isEmpty', function () {
+	      var bar;
+	      return function (obj) {
+	    	  for (bar in obj) {
+	              if (obj.hasOwnProperty(bar)) {
+	                  return false;
+	              }
+	          }
+	          return true;
+	      };
+	  })
+	  .service('fronteira', function($rootScope){
+			$(window).on('resize', function(){
+				
+				if (typeof window.timeResize == 'undefined')
+					window.timeResize = setTimeout(function () {}, 0);
+					clearTimeout(window.timeResize);
+					window.timeResize = setTimeout(function () {
+						var W = (typeof window.innerWidth == "undefined") ? document.documentElement.offsetWidth : window.innerWidth;
+						// var H = (typeof window.innerHeight == "undefined") ? document.documentElement.offsetHeight : window.innerHeight;
+						if( W <= 335 ){
+							$rootScope.fronteira = "lowSmartphone";
+						}else if( W <= 667 ){
+							$rootScope.fronteira = "smartphone";
+						}else if( W <= 768 ){
+							$rootScope.fronteira = "tablet";
+						}else if( W > 768 ){
+							$rootScope.fronteira = "desktop";
+						}
+						
+					}, 200);
+				
+			});
+			
+			this.calc = function(){
+				var W = (typeof window.innerWidth == "undefined") ? document.documentElement.offsetWidth : window.innerWidth;
+				
+				if( W <= 335 ){
+					return "lowSmartphone";
+				}else if( W <= 667 ){
+					return "smartphone";
+				}else if( W <= 768 ){
+					return "tablet";
+				}else if( W > 768 ){
+					return "desktop";
+				}
+			};
+		});
+  
+  
+  
+  
+  	
+  
+    
+});

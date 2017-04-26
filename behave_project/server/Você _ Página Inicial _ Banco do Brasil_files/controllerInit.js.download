@@ -1,0 +1,118 @@
+define([], function() {
+    'use strict';
+
+    function controllerInit(fMigalha, $rootScope, $http, $cookieUtil, fDescritorPaginas, $location) {
+    	
+    
+			fDescritorPaginas.getComponente().then(function(response) {
+				if (response.success) {
+					var descritor = response.componente;
+					var siteAutorizado = false;
+					if(typeof(descritor.siteAutorizado) != "undefined"){
+						for(var i = 0; i < descritor.siteAutorizado.length; i++){
+							if(portalParam.site.toLowerCase() == descritor.siteAutorizado[i].toLowerCase()){
+								siteAutorizado = true;		
+							}
+						}
+					}else{
+						siteAutorizado = true;
+					}
+					if(!siteAutorizado){
+						$location.path("/404");	
+					}
+	
+				}
+			});
+    	
+    	
+    	var urlRest = "/pbb/rest/"; 
+    	
+    		fMigalha.getGTM().then(function(response) {
+    			if (response.success) {
+    				//GTM
+    				portalParam.gtm = response.dados;    			
+    				portalParam.gtm.segmentoCliente 	= (typeof portalParam.gtm.segmentoCliente 	!== 'undefined' && portalParam.gtm.segmentoCliente != "_") ? portalParam.gtm.segmentoCliente : '';
+    				portalParam.gtm.areaSite			= (typeof portalParam.gtm.areaSite 				!== 'undefined' && portalParam.gtm.areaSite != "_")  ? portalParam.gtm.areaSite : '';
+    				portalParam.gtm.categoria			= (typeof portalParam.gtm.categoria 			!== 'undefined' && portalParam.gtm.categoria != "_") ? portalParam.gtm.categoria : ''; 
+    				portalParam.gtm.necessidade	 		= (typeof portalParam.gtm.necessidade 			!== 'undefined' && portalParam.gtm.necessidade != "_") ? portalParam.gtm.necessidade : '';
+    				portalParam.gtm.modalidade	 		= (typeof portalParam.gtm.modalidade 			!== 'undefined' && portalParam.gtm.modalidade != "_")  ? portalParam.gtm.modalidade : '';
+    				portalParam.gtm.pnp = "";
+    				if(portalParam.gtm.segmentoCliente != ""){
+	    				portalParam.gtm.pnp = portalParam.gtm.segmentoCliente;
+    				}
+	    			if(portalParam.gtm.areaSite != ""){
+    					if(portalParam.gtm.categoria == "" && portalParam.gtm.necessidade == "" && portalParam.gtm.modalidade == ""){
+    						portalParam.gtm.pnp += "/"+portalParam.gtm.areaSite;
+    					}
+    				}
+    				if(portalParam.gtm.categoria != ""){
+	    				portalParam.gtm.pnp += "/"+portalParam.gtm.categoria;
+	    			}
+	    			if(portalParam.gtm.necessidade != ""){
+	    				if(portalParam.gtm.modalidade == ""){
+	    					portalParam.gtm.pnp += "/"+portalParam.gtm.necessidade;
+	    				}
+	    			}
+	    			if(portalParam.gtm.modalidade != ""){
+	    				portalParam.gtm.pnp += "/"+portalParam.gtm.modalidade;
+	    			}
+    			}
+    		});
+    	
+        var hostname = document.location.hostname;
+        // portalParam.facebookKey = (hostname == "localhost" || hostname.indexOf('ok.io') != -1) ? 943682285726468 : 111881602147649;
+        portalParam.facebookKey = 1118816021476492; //943682285726468; 
+        portalParam.youtubeKey = 'AIzaSyDCIytE0jvg0wo29mIN0ehxGP7dtPzebSs'; // apenas desenvolvimento subtituir pelo do BB
+        
+        /*
+         * Teste para internacionalização do site bb label em html angular
+         */
+        $rootScope.LABEL = {};
+		
+    	$http({
+    		method: "GET",
+    		url: urlRest + "WsTraducao/"+portalParam.diretorioPai+"/"+portalParam.diretorioFilho+"/"+portalParam.seguimentoFiltro+"/"+portalParam.idioma+"/"+portalParam.tempoCache,
+    	}).success(function(data){
+    		for(var i in data) { $rootScope.LABEL[i] = data[i];}
+    	}); 
+    	
+    	$http({
+    		method: "GET",
+    		url: urlRest + "WsCustomizacao/",
+    	}).success(function(data){
+    		$rootScope.customizacao = data;
+    	});
+    	
+    	
+    	$rootScope.isAvCookies = false;
+    	$rootScope.avCookies = null;
+    	
+    	if(typeof $cookieUtil.get('pbb.politica') === 'undefined'){
+    		$http({
+        		method: "GET",
+        		url: urlRest + "WsNoticia/"+portalParam.diretorioPai+"/500858/77/"+portalParam.seguimentoFiltro+"/"+portalParam.idioma+"/"+portalParam.tempoCache+"/1",
+        	}).success(function(data){
+        		$rootScope.avCookies = data;
+        		$rootScope.isAvCookies = true;
+        	}); 
+    	}
+
+    	portalParam.writeListURLs = [
+ 		                            "bb.com.br",
+ 		                            "bancobrasil",
+ 		                            "docs",
+ 		                            "pbb",
+ 		                            "s001",
+ 		                            "javascript:void("
+ 		                            ];
+    	$http({
+    		method: "GET",
+    		url: urlRest + "WsRedSiteExt/writeList/"+portalParam.tempoCache,
+    	}).success(function(data){
+    		for(var i in data) { 
+    			portalParam.writeListURLs.push(data[i].titulo.trim());
+    		}
+    	});
+    } 
+    return controllerInit;
+});
