@@ -1,9 +1,0 @@
-from selenium.webdriver.support.ui import WebDriverWait
-from selenium.webdriver.common.by import By
-
-class PageBase:
-
-    wait = WebDriverWait(driver, 60)
-
-    def wait_(self, locator):
-        wait.until(lambda driver: driver.find_element(By.CSS_SELECTOR, allocator))

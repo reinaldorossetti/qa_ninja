@@ -9,7 +9,7 @@ class LoginTest(PageBase):
         'login':'css selector=input#tl_login',
         'password':'css selector=input#tl_password',
         'submit':'css selector=input[type=\'submit\']',
-        'title':'div.menu_title span'
+        'title':'css selector=div.menu_title span'
     }
 
     def test_login_password_ok(self, tl_login, tl_password, user_type):
